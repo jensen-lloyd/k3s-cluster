@@ -36,25 +36,21 @@ spec:
             - name: IMMICH_DATA_DIR
               value: /storage/data
             - name: IMMICH_PORT
-              value: "443"
+              value: "80"
             - name: DB_HOSTNAME
               value: localhost
-
             - name: DB_PORT
               value: "5432"
-
             - name: DB_USERNAME
               valueFrom:
                 secretKeyRef:
                   name: immich-db
                   key: username
-
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: immich-db
                   key: password
-
             - name: DB_DATABASE_NAME
               valueFrom:
                 secretKeyRef:
@@ -79,19 +75,18 @@ spec:
                 -o gid=1000 \
                 -o mp_umask=002
 
-
-              set -e
-              # wait for Postgres
+              # wait for Postgres (JuiceFS mount)
               until pg_isready -h localhost -p 5432; do
                 echo "Waiting for Postgres..."
                 sleep 2
               done
 
               exec start.sh
-
           volumeMounts:
-            - name: immich-storage
+            - name: immich-media
               mountPath: /storage
+            - name: immich-db
+              mountPath: /storage/db
           ports:
             - containerPort: 2283
           resources:
@@ -143,52 +138,9 @@ spec:
                 secretKeyRef:
                   name: immich-db
                   key: database
-            - name: ACCESS_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: immich-s3
-                  key: accessKeyId
-            - name: SECRET_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: immich-s3
-                  key: secretAccessKey
-            - name: NODE_IP
-              valueFrom:
-                fieldRef:
-                  fieldPath: status.hostIP
-
-
-          command:
-            - sh
-            - -c
-            - |
-              set -e
-              apt-get update
-              DEBIAN_FRONTEND=noninteractive apt-get install -y s3fs fuse
-
-              echo "$ACCESS_KEY:$SECRET_KEY" > /tmp/passwd-s3fs
-              chmod 600 /tmp/passwd-s3fs
-
-              mkdir -p /storage
-
-              echo "Mounting S3 bucket for Postgres..."
-              s3fs immich-bucket /storage/db \
-                -o url=http://$NODE_IP:9000 \
-                -o use_path_request_style \
-                -o passwd_file=/tmp/passwd-s3fs \
-                -o allow_other \
-                -o uid=999 \
-                -o gid=999 \
-                -o mp_umask=007
-
-              echo "Starting Postgres..."
-              exec docker-entrypoint.sh postgres
-
-
           volumeMounts:
-            - name: immich-storage
-              mountPath: /storage/db
+            - name: immich-db
+              mountPath: /var/lib/postgresql/data
           resources:
             requests:
               cpu: "100m"
@@ -198,10 +150,13 @@ spec:
               memory: "2Gi"
 
       volumes:
-        - name: immich-storage
-          emptyDir: {}
+        - name: immich-media
+          emptyDir: {} # S3FUSE will mount here dynamically
         - name: ml-cache
           emptyDir: {}
+        - name: immich-db
+          persistentVolumeClaim:
+            claimName: juicefs-pvc
 ---
 apiVersion: v1
 kind: Service
@@ -237,4 +192,3 @@ spec:
     - hosts:
         - immich.colins.io
       secretName: wildcard-colins-io-tls
-
