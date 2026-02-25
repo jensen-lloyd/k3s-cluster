@@ -1,0 +1,17 @@
+docker run -d --name redis1 \
+  -p 6379:6379 -p 16379:16379 \
+  -v /opt/redis1/data:/data \
+  redis:7-alpine \
+  redis-server --port 6379 --cluster-enabled yes --cluster-config-file /data/nodes.conf --cluster-node-timeout 5000 --appendonly yes
+
+
+
+
+Run the above on each node
+
+Then create the cluster
+
+
+docker exec -it redis1 redis-cli --cluster create   10.0.1.1:6379 10.0.1.2:6379 10.0.1.3:6379   --cluster-replicas 0
+
+

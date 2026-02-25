@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: juicefs
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: juicefs
+  template:
+    metadata:
+      labels:
+        app: juicefs
+    spec:
+      containers:
+      - name: juicefs
+        image: juicedata/juicefs:latest
+        securityContext:
+          privileged: true     # Required for FUSE
+        env:
+        - name: MINIO_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        - name: ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: juicefs-s3
+              key: access-key
+        - name: SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: juicefs-s3
+              key: secret-key
+        command:
+        - sh
+        - -c
+        - |
+          set -e
+          mkdir -p /mnt/juicefs
+          juicefs mount \
+            --storage s3 \
+            --bucket immich-bucket \
+            --access-key $ACCESS_KEY \
+            --secret-key $SECRET_KEY \
+            --endpoint http://$MINIO_IP:9000 \
+            --redis redis://10.0.1.1:6379,10.0.1.2:6379,10.0.1.3:6379 \
+            /mnt/juicefs
+          sleep infinity
+        volumeMounts:
+        - name: juicefs-host
+          mountPath: /mnt/juicefs
+      volumes:
+      - name: juicefs-host
+        hostPath:
+          path: /mnt/juicefs
+          type: DirectoryOrCreate
