@@ -156,7 +156,7 @@ spec:
           emptyDir: {}
         - name: immich-db
           persistentVolumeClaim:
-            claimName: juicefs-pvc
+            claimName: immich-db-pvc
 ---
 apiVersion: v1
 kind: Service
