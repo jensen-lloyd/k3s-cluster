@@ -40,6 +40,29 @@ spec:
             - name: DB_HOSTNAME
               value: localhost
 
+            - name: DB_PORT
+              value: "5432"
+
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: immich-db
+                  key: username
+
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: immich-db
+                  key: password
+
+            - name: DB_DATABASE_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: immich-db
+                  key: database
+
+
+
           command:
             - sh
             - -c
