@@ -37,7 +37,7 @@ spec:
               value: /storage/data
             - name: IMMICH_PORT
               value: "443"
-            - name: DB_HOST
+            - name: DB_HOSTNAME
               value: localhost
 
           command:
