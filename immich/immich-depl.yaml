@@ -78,6 +78,15 @@ spec:
                 -o uid=1000 \
                 -o gid=1000 \
                 -o mp_umask=002
+
+
+              set -e
+              # wait for Postgres
+              until pg_isready -h localhost -p 5432; do
+                echo "Waiting for Postgres..."
+                sleep 2
+              done
+
               exec start.sh
 
           volumeMounts:
