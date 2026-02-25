@@ -36,7 +36,7 @@ spec:
             - name: IMMICH_DATA_DIR
               value: /storage/data
             - name: IMMICH_PORT
-              value: 443
+              value: "443"
           command:
             - sh
             - -c
