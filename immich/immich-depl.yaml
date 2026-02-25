@@ -91,7 +91,7 @@ spec:
               memory: "100Mi"
 
         - name: postgres
-          image: ghcr.io/immich-app/postgres:14-vectorchord
+          image: tensorchord/pgvecto-rs:pg14-v0.2.0
           env:
             - name: POSTGRES_USER
               valueFrom:
