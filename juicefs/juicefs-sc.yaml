@@ -16,4 +16,4 @@ parameters:
   name: "juicefs"
   metaurl: "redis://10.0.1.1:6379,10.0.1.2:6379,10.0.1.3:6379/0"
   storage: "s3"
-  bucket: "http://NODE_IP:9000/juicefs"
+  bucket: "http://10.0.1.100:9000/juicefs"
