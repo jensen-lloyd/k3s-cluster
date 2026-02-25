@@ -53,7 +53,8 @@ spec:
                 -o uid=1000 \
                 -o gid=1000 \
                 -o mp_umask=002
-              exec /app/immich-server
+              exec start.sh
+
           volumeMounts:
             - name: immich-storage
               mountPath: /storage
