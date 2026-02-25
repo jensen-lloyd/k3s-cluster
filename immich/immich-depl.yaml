@@ -60,9 +60,6 @@ spec:
                 secretKeyRef:
                   name: immich-db
                   key: database
-
-
-
           command:
             - sh
             - -c
