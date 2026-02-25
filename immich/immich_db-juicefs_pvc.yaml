@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: juicefs-pvc-immich_db
+  namespace: default
+spec:
+  accessModes:
+    - ReadWriteOnce   # PostgreSQL only needs a single write
+  resources:
+    requests:
+      storage: 5Gi     # adjust as needed
+  storageClassName: juicefs-sc
