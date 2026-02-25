@@ -1,0 +1,205 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: immich
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: immich
+  template:
+    metadata:
+      labels:
+        app: immich
+    spec:
+      containers:
+        - name: immich-server
+          image: ghcr.io/immich-app/immich-server:release
+          securityContext:
+            privileged: true   # REQUIRED for FUSE
+          env:
+            - name: ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: immich-s3
+                  key: accessKeyId
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: immich-s3
+                  key: secretAccessKey
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: IMMICH_DATA_DIR
+              value: /storage/data
+          command:
+            - sh
+            - -c
+            - |
+              set -e
+              apt-get update
+              DEBIAN_FRONTEND=noninteractive apt-get install -y s3fs fuse
+              mkdir -p /storage
+              echo "$ACCESS_KEY:$SECRET_KEY" > /tmp/passwd-s3fs
+              chmod 600 /tmp/passwd-s3fs
+              s3fs immich-bucket /storage \
+                -o url=http://$NODE_IP:9000 \
+                -o use_path_request_style \
+                -o passwd_file=/tmp/passwd-s3fs \
+                -o allow_other \
+                -o uid=1000 \
+                -o gid=1000 \
+                -o mp_umask=002
+              exec /app/immich-server
+          volumeMounts:
+            - name: immich-storage
+              mountPath: /storage
+          ports:
+            - containerPort: 2283
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "500Mi"
+            limits:
+              cpu: "3000m"
+              memory: "8Gi"
+
+        - name: immich-ml
+          image: ghcr.io/immich-app/immich-machine-learning:release
+          env:
+            - name: ML_CACHE_DIR
+              value: /cache
+          volumeMounts:
+            - name: ml-cache
+              mountPath: /cache
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "500Mi"
+            limits:
+              cpu: "2000m"
+              memory: "2Gi"
+
+        - name: redis
+          image: docker.io/valkey/valkey:9
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "100Mi"
+
+        - name: postgres
+          image: ghcr.io/immich-app/postgres:14-vectorchord
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: immich-db
+                  key: username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: immich-db
+                  key: password
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: immich-db
+                  key: database
+            - name: ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: immich-s3
+                  key: accessKeyId
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: immich-s3
+                  key: secretAccessKey
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+
+
+          command:
+            - sh
+            - -c
+            - |
+              set -e
+              apt-get update
+              DEBIAN_FRONTEND=noninteractive apt-get install -y s3fs fuse
+
+              echo "$ACCESS_KEY:$SECRET_KEY" > /tmp/passwd-s3fs
+              chmod 600 /tmp/passwd-s3fs
+
+              mkdir -p /storage
+
+              echo "Mounting S3 bucket for Postgres..."
+              s3fs immich-bucket /storage/db \
+                -o url=http://$NODE_IP:9000 \
+                -o use_path_request_style \
+                -o passwd_file=/tmp/passwd-s3fs \
+                -o allow_other \
+                -o uid=999 \
+                -o gid=999 \
+                -o mp_umask=007
+
+              echo "Starting Postgres..."
+              exec docker-entrypoint.sh postgres
+
+
+          volumeMounts:
+            - name: immich-storage
+              mountPath: /storage/db
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "500Mi"
+            limits:
+              cpu: "2000m"
+              memory: "2Gi"
+
+      volumes:
+        - name: immich-storage
+          emptyDir: {}
+        - name: ml-cache
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: immich
+spec:
+  selector:
+    app: immich
+  ports:
+    - port: 80
+      targetPort: 2283
+  type: ClusterIP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: immich
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  rules:
+    - host: immich.colins.io
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: immich
+                port:
+                  number: 80
+  tls:
+    - hosts:
+        - immich.colins.io
+      secretName: wildcard-colins-io-tls
+

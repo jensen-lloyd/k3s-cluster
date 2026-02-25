@@ -1,0 +1,17 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: wildcard-colins-io
+  namespace: default
+spec:
+  secretName: wildcard-colins-io-tls   # where the cert will be stored
+  issuerRef:
+    name: letsencrypt-wildcard
+    kind: ClusterIssuer
+  commonName: "*.colins.io"
+  dnsNames:
+    - "*.colins.io"
+  privateKey:
+    algorithm: RSA
+    size: 4096
+

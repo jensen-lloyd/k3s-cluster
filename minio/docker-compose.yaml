@@ -1,0 +1,32 @@
+services:
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    restart: always
+    network_mode: host
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: Blade%Star2%Tokyo
+      MINIO_ERASURE_SET_DRIVE_COUNT: "12"
+      MINIO_BROWSER: "on"
+    command: >
+      server
+      http://10.1.0.1/mnt/minio1
+      http://10.1.0.1/mnt/minio2
+      http://10.1.0.1/mnt/minio3
+      http://10.1.0.1/mnt/minio4
+      http://10.1.0.2/mnt/minio1
+      http://10.1.0.2/mnt/minio2
+      http://10.1.0.2/mnt/minio3
+      http://10.1.0.2/mnt/minio4
+      http://10.1.0.3/mnt/minio1
+      http://10.1.0.3/mnt/minio2
+      http://10.1.0.3/mnt/minio3
+      http://10.1.0.3/mnt/minio4
+      --console-address ":9001"
+    volumes:
+      - /mnt/minio1:/mnt/minio1
+      - /mnt/minio2:/mnt/minio2
+      - /mnt/minio3:/mnt/minio3
+      - /mnt/minio4:/mnt/minio4
+
