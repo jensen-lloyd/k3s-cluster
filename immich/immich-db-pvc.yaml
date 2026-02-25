@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: juicefs-pvc-immich_db
+  name: immich-db-pvc
   namespace: default
 spec:
   accessModes:
