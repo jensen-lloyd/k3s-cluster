@@ -1,0 +1,39 @@
+# Use to provision filesystem on PVC for the first time - creates an entry in the Redis db
+
+
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: juicefs-format
+  namespace: default
+spec:
+  containers:
+    - name: juicefs
+      image: juicedata/mount:ce-v1.3.0
+      command:
+        - sh
+        - -c
+        - |
+          set -e
+          echo "Formatting JuiceFS filesystem..."
+          juicefs format \
+            --storage s3 \
+            --bucket http://10.0.1.100:9000/juicefs \
+            --access-key $ACCESS_KEY \
+            --secret-key $SECRET_KEY \
+            redis://10.0.1.1:6379,10.0.1.2:6379,10.0.1.3:6379/0 \
+            juicefs
+          echo "JuiceFS filesystem 'juicefs' formatted!"
+      env:
+        - name: ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: juicefs-s3
+              key: access-key
+        - name: SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: juicefs-s3
+              key: secret-key
+  restartPolicy: Never
