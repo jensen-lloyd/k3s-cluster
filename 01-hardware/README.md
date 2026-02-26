@@ -55,6 +55,7 @@ Some of the salvaged drives were only 256GB, which made them unusable for this s
 
 This early design constraint influenced the hardware layout significantly - and saved problems later.
 
+![Cluster overview](cluster-photo-1.jpg)
 ---
 
 ## Key Decisions
@@ -124,6 +125,7 @@ This design:
 * Preserved high-speed inter-node traffic, which is crucial for a responsive cluster to preserve as much performance as possible
 * Introduced some networking complexity (which I’ll cover in later posts)
 
+![Cluster networking](cluster-photo-2.jpg)
 ---
 
 ## Physical Build
