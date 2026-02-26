@@ -83,7 +83,7 @@ Running Kubernetes at home is objectively overkill.
 
 A single machine running Docker would have been simpler.
 
-But the goal here isn’t simplicity — it’s learning.
+But the goal here isn’t simplicity - it’s learning.
 
 I wanted to:
 
