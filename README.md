@@ -10,6 +10,11 @@ This repository documents the design, decisions, and implementation of my self-h
 - [x] TLS certbot config and commands
 - [x] Jellyfin video streaming
 - [ ] Immich photo backup
+- [ ] PiHole DNS filtering & cache
+- [ ] Unifi controller for network devices
+- [ ] Traccar location tracking/history
+- [ ] Local and offsite backup strategy
+- [ ] Joplin Notes server
 
 
 ## Articles
