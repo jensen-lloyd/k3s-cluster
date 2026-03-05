@@ -122,7 +122,7 @@ The built-in gigabit NICs connect to a standard 8-port switch for:
 This design:
 
 * Eliminated the need for a 10Gb switch - a massive cost saving!
-* Preserved high-speed inter-node traffic, which is crucial for a responsive cluster to preserve as much performance as possible
+* Ensured high-speed inter-node traffic, which is crucial for a responsive cluster to preserve as much performance as possible
 * Introduced some networking complexity (which I’ll cover in later posts)
 
 ![Cluster networking](cluster-photo-2.jpg)
@@ -130,8 +130,8 @@ This design:
 
 ## Physical Build
 
-Assembly took a few hours at work after-hours, to disassamble, consolidate parts, and clean.
-Then another couple of hours at home to install NICs, and get everything set up in my cupboard with power and networking - also requiring an ethernet run to downstairs to connect to the rest of the network, and the internet.
+Assembly took a hour or so at work after-hours, to disassamble, consolidate parts, and clean.
+Then another couple of hours at home to install NICs, install the host OS x3, and get everything set up in my cupboard with power and networking - also requiring an ethernet run on another day to downstairs for connecting to the rest of the network and internet.
 
 Having upgraded and repaired hundreds of machines before, I can confidently say these ThinkCentres are a pleasure to work with.
 
