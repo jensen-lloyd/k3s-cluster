@@ -82,7 +82,7 @@ node-1@node-1:~$
 ```
 
 **Each node is getting its correct IP address from DHCP on my router**  
-This is just the enp3s0 gigatebit ethernet that we're worried about for our LAN. The other two interfaces we'll look at later.
+This is just the enp3s0 gigabit ethernet that we're worried about for our LAN. The other two interfaces we'll look at later.
 
 ```bash
 node-1@node-1:~$ ip a
