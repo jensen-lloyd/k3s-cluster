@@ -1,5 +1,5 @@
 ## Intro
-In the last article, I built out the hardware for my 3-node cluster using salvaged e-waste PCs.
+In my last article, I built out the hardware for my 3-node cluster using salvaged e-waste PCs.
 
 Now we need to get these machines to a software and OS configuration that is consistent, predictable, and ready to act as a single system.
 I'll be treating each node as more or less disposable - if one breaks, I should be able to rebuild it quickly and get back to a known-good state.
