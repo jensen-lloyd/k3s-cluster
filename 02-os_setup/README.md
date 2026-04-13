@@ -221,7 +221,7 @@ PermitRootLogin no
 (Here we also ensure that we don't allow root login, meaning a potential attacker would also need to elevate their permissions using the password before being able to do any damage)
 
 So now, logging into node-2 looks like this.  
-![](photo-1.jpg)
+![](photo-1.png)
 
 
 Finally, There's one more thing we can do here to protect the servers (well, node-1 specifically as that's what's exposed to the internet) - Fail2ban.
