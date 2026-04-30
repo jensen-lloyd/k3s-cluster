@@ -30,10 +30,10 @@ services:
       mkdir -p /mnt/juicefs &&
       juicefs mount
         --storage s3
-        --bucket $BUCKET
-        --access-key $ACCESS_KEY
-        --secret-key $SECRET_KEY
-        $METAURL
+        --bucket $$BUCKET
+        --access-key $$ACCESS_KEY
+        --secret-key $$SECRET_KEY
+        $$METAURL
         /mnt/juicefs
         -f
       "
