@@ -20,6 +20,6 @@ This repository documents the design, decisions, and implementation of my self-h
 ## Articles
 
 1. [Building a Cloud from E-Waste](01-hardware/)
-2. OS & Cluster Preparation (coming soon)
+2. [OS & Storage Preparation](02-os_setup/)
 3. Networking Design (coming soon)
 4. MinIO Storage Architecture (coming soon)
