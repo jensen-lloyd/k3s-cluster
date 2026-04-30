@@ -10,6 +10,18 @@ services:
       --port 6379
       --appendonly yes
       --protected-mode no
+
+      --appendfsync everysec
+      --auto-aof-rewrite-percentage 25
+      --auto-aof-rewrite-min-size 32mb 
+      --dir /data
+    
+      --maxmemory 512mb
+      --maxmemory-policy noeviction
+      --save 900 1
+      --save 300 10
+      --save 60 10000
+
       --replicaof 10.0.1.1 6379
     volumes:
       - /mnt/raid/redis:/data
