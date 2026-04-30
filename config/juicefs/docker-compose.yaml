@@ -1,0 +1,43 @@
+version: "3.8"
+
+services:
+  juicefs:
+    image: juicedata/mount:ce-v1.3.0
+    container_name: juicefs
+
+    privileged: true
+
+    env_file:
+      - ./juicefs.env
+
+    environment:
+      # ensures fuse works cleanly in container
+      - JFS_MOUNT_POINT=/mnt/juicefs
+
+    devices:
+      - /dev/fuse:/dev/fuse
+
+    cap_add:
+      - SYS_ADMIN
+
+    security_opt:
+      - apparmor:unconfined
+
+    volumes:
+      # this is the mount point exposed to host
+      - /mnt/raid/juicefs:/mnt/juicefs
+
+    command: >
+      sh -c "
+      mkdir -p /mnt/juicefs &&
+      juicefs mount
+        --storage s3
+        --bucket $BUCKET
+        --access-key $ACCESS_KEY
+        --secret-key $SECRET_KEY
+        $METAURL
+        /mnt/juicefs
+        -f
+      "
+
+    restart: unless-stopped
