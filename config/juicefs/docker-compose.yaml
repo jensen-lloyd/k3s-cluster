@@ -8,7 +8,7 @@ services:
     privileged: true
 
     env_file:
-      - ./juicefs.env
+      - ~/./juicefs.env
 
     environment:
       # ensures fuse works cleanly in container
