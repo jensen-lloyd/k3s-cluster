@@ -28,14 +28,6 @@ services:
     command: >
       sh -c "
       mkdir -p /mnt/juicefs &&
-      juicefs mount
-        --storage s3
-        --bucket $$BUCKET
-        --access-key $$ACCESS_KEY
-        --secret-key $$SECRET_KEY
-        $$METAURL
-        /mnt/juicefs
-        -f
-      "
+      juicefs mount --storage s3 --bucket $BUCKET --access-key $ACCESS_KEY --secret-key $SECRET_KEY $METAURL /mnt/juicefs -f"
 
     restart: unless-stopped
