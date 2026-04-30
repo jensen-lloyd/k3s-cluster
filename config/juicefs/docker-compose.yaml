@@ -4,30 +4,39 @@ services:
     container_name: juicefs
 
     privileged: true
+    restart: unless-stopped
 
     env_file:
       - juicefs.env
 
-    environment:
-      # ensures fuse works cleanly in container
-      - JFS_MOUNT_POINT=/mnt/juicefs
+    cap_add:
+      - SYS_ADMIN
 
     devices:
       - /dev/fuse:/dev/fuse
-
-    cap_add:
-      - SYS_ADMIN
 
     security_opt:
       - apparmor:unconfined
 
     volumes:
-      # this is the mount point exposed to host
-      - /mnt/raid/juicefs:/mnt/juicefs
+      # Host mountpoint where JuiceFS will appear
+      - /mnt/raid/juicefs:/mnt:rw,rshared
 
-    command: >
-      sh -c "
-      mkdir -p /mnt/juicefs &&
-      juicefs mount --storage s3 --bucket $$BUCKET --access-key $$ACCESS_KEY --secret-key $$SECRET_KEY $$METAURL /mnt/juicefs -f"
+    command:
+      [
+        "juicefs",
+        "mount",
+        "--storage", "s3",
+        "--bucket", "${BUCKET}",
+        "--access-key", "${ACCESS_KEY}",
+        "--secret-key", "${SECRET_KEY}",
+        "${METAURL}",
+        "/mnt"
+      ]
 
-    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "cat /mnt/.control >/dev/null 2>&1 || ls /mnt >/dev/null 2>&1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
