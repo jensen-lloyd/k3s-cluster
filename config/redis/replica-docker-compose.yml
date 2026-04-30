@@ -1,0 +1,35 @@
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    restart: unless-stopped
+    network_mode: host
+    command: >
+      redis-server
+      --bind 0.0.0.0
+      --port 6379
+      --appendonly yes
+      --protected-mode no
+      --replicaof 10.0.1.1 6379
+    volumes:
+      - /mnt/raid/redis:/data
+
+  sentinel:
+    image: redis:7-alpine
+    container_name: sentinel
+    restart: unless-stopped
+    network_mode: host
+    depends_on:
+      - redis
+    command: >
+      sh -c '
+      cat > /tmp/sentinel.conf <<EOF
+      port 26379
+      bind 0.0.0.0
+      sentinel monitor mymaster 10.0.1.1 6379 2
+      sentinel down-after-milliseconds mymaster 5000
+      sentinel failover-timeout mymaster 10000
+      sentinel parallel-syncs mymaster 1
+      EOF
+      redis-sentinel /tmp/sentinel.conf
+      '
