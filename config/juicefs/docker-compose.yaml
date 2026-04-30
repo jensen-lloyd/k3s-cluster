@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   juicefs:
     image: juicedata/mount:ce-v1.3.0
