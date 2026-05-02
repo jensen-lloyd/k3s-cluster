@@ -94,6 +94,7 @@ spec:
 
               echo "127.0.0.1 redis" >> /etc/hosts
 
+              sleep 10m 
 
               exec start.sh
 
