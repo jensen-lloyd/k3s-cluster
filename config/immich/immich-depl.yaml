@@ -99,7 +99,7 @@ spec:
 
           volumeMounts:
           - mountPath: /data
-            name: juicefs
+            name: immich-juicefs
 
 
           ports:
