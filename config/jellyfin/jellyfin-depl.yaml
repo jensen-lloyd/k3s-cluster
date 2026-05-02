@@ -36,11 +36,11 @@ spec:
                 fieldRef:
                   fieldPath: status.hostIP
             - name: JELLYFIN_CONFIG_DIR
-              value: /storage/config
+              value: /block-storage/config
             - name: JELLYFIN_CACHE_DIR
-              value: /storage/cache
+              value: /object-storage/cache
             - name: JELLYFIN_DATA_DIR
-              value: /storage/data
+              value: /object-storage/data
 
 
           command:
@@ -57,10 +57,10 @@ spec:
               echo "$ACCESS_KEY:$SECRET_KEY" > /tmp/passwd-s3fs
               chmod 600 /tmp/passwd-s3fs
 
-              mkdir -p /storage
+              mkdir -p /object-storage
 
               echo "Mounting S3 bucket..."
-              s3fs jellyfin-video /storage \
+              s3fs jellyfin-video /object-storage \
                 -o url=http://$NODE_IP:9000 \
                 -o use_path_request_style \
                 -o passwd_file=/tmp/passwd-s3fs \
@@ -73,8 +73,10 @@ spec:
               exec /jellyfin/jellyfin
 
           volumeMounts:
-            - name: jellyfin-storage
-              mountPath: /storage
+            - name: jellyfin-minio
+              mountPath: /object-storage
+            - name: jellyfin-juicefs
+              mountPath: /block-storage
 
           ports:
             - containerPort: 8096
@@ -89,8 +91,12 @@ spec:
               memory: "8Gi"
 
       volumes:
-        - name: jellyfin-storage
+        - name: jellyfin-minio
           emptyDir: {}
+        - name: jellyfin-juicefs
+          hostPath:
+            path: /mnt/raid/juicefs/jellyfin
+            type: DirectoryOrCreate
 
 --- 
 apiVersion: v1 
