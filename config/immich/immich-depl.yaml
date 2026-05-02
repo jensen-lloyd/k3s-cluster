@@ -44,6 +44,9 @@ spec:
             - name: IMMICH_PORT
               value: "2283"
 
+            - name: REDIS_HOST
+              value: 127.0.0.1
+
             - name: DB_HOSTNAME
               value: localhost
 
