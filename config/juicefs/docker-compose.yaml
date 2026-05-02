@@ -29,6 +29,8 @@ services:
         "--storage", "s3",
         "--bucket", "http://minio.local:9000/juicefs",
         "redis://mymaster,10.0.1.1,10.0.1.2,10.0.1.3:26379/0",
+        "--writeback=false",
+        "--cache-size 64"
         "/mnt"
       ]
 
