@@ -95,7 +95,7 @@ spec:
                 -o gid=1000 \
                 -o mp_umask=002
 
-              echo "127.0.0.1 redis" > /etc/hosts
+              echo "127.0.0.1 redis" >> /etc/hosts
 
 
               exec start.sh
