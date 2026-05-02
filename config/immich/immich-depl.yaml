@@ -127,6 +127,8 @@ spec:
           image: ghcr.io/immich-app/immich-machine-learning:release
 
           env:
+            - name: IMMICH_PORT
+              value: "2283"
             - name: ML_CACHE_DIR
               value: /cache
 
