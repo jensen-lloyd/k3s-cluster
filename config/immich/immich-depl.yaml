@@ -78,12 +78,12 @@ spec:
               apt-get update
               DEBIAN_FRONTEND=noninteractive apt-get install -y s3fs fuse postgresql-client
 
-              mkdir -p /mnt/object-storage
+              mkdir -p /data
 
               echo "$ACCESS_KEY:$SECRET_KEY" > /tmp/passwd-s3fs
               chmod 600 /tmp/passwd-s3fs
 
-              s3fs immich-bucket /mnt/object-storage \
+              s3fs immich-bucket /data \
                 -o url=http://$NODE_IP:9000 \
                 -o use_path_request_style \
                 -o passwd_file=/tmp/passwd-s3fs \
