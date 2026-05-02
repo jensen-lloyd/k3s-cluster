@@ -1,0 +1,19 @@
+services:
+  juicefs-init:
+    image: juicedata/mount:ce-v1.3.0
+    container_name: juicefs-init
+
+    env_file:
+      - juicefs.env
+
+    command:
+      - sh
+      - -c
+      - >
+        juicefs format
+        "--storage", "s3",
+        "--bucket", "http://minio.local:9000/juicefs",
+        "redis://mymaster,10.0.1.1,10.0.1.2,10.0.1.3:26379/0",
+        "/mnt"
+
+    restart: "no"
