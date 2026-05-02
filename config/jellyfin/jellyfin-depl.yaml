@@ -40,7 +40,7 @@ spec:
             - name: JELLYFIN_CACHE_DIR
               value: /mnt/object-storage/cache
             - name: JELLYFIN_DATA_DIR
-              value: /mnt/object-storage/data
+              value: /mnt/block-storage/data
 
 
           command:
