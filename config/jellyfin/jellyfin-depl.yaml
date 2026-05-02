@@ -36,11 +36,11 @@ spec:
                 fieldRef:
                   fieldPath: status.hostIP
             - name: JELLYFIN_CONFIG_DIR
-              value: /block-storage/config
+              value: /mnt/block-storage/config
             - name: JELLYFIN_CACHE_DIR
-              value: /object-storage/cache
+              value: /mnt/object-storage/cache
             - name: JELLYFIN_DATA_DIR
-              value: /object-storage/data
+              value: /mnt/object-storage/data
 
 
           command:
@@ -74,9 +74,9 @@ spec:
 
           volumeMounts:
             - name: jellyfin-minio
-              mountPath: /object-storage
+              mountPath: /mnt/object-storage
             - name: jellyfin-juicefs
-              mountPath: /block-storage
+              mountPath: /mnt/block-storage
 
           ports:
             - containerPort: 8096
@@ -95,7 +95,7 @@ spec:
           emptyDir: {}
         - name: jellyfin-juicefs
           hostPath:
-            path: /mnt/raid/juicefs/jellyfin
+            path: /mnt/juicefs/jellyfin
             type: DirectoryOrCreate
 
 --- 
