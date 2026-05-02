@@ -78,12 +78,12 @@ spec:
               apt-get update
               DEBIAN_FRONTEND=noninteractive apt-get install -y s3fs fuse postgresql-client
 
-              mkdir -p /data
+              mkdir -p /mnt/minio
 
               echo "$ACCESS_KEY:$SECRET_KEY" > /tmp/passwd-s3fs
               chmod 600 /tmp/passwd-s3fs
 
-              s3fs immich-backup /data \
+              s3fs immich-backup /mnt/minio \
                 -o url=http://$NODE_IP:9000 \
                 -o use_path_request_style \
                 -o passwd_file=/tmp/passwd-s3fs \
@@ -96,6 +96,11 @@ spec:
               echo "127.0.0.1 redis" >> /etc/hosts
 
               exec start.sh
+
+          volumeMounts:
+          - mountPath: /data
+            name: juicefs
+
 
           ports:
             - containerPort: 2283
@@ -119,10 +124,6 @@ spec:
               value: "2283"
             - name: ML_CACHE_DIR
               value: /cache
-
-          volumeMounts:
-            - name: immich-minio
-              mountPath: /cache
 
           resources:
             requests:
@@ -185,12 +186,6 @@ spec:
               memory: "2Gi"
 
       volumes:
-        #
-        # S3FS mount target
-        #
-        - name: immich-minio
-          emptyDir: {}
-
         #
         # JuiceFS shared host mount
         #
