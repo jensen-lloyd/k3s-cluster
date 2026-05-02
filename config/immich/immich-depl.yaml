@@ -14,59 +14,79 @@ spec:
         app: immich
     spec:
       containers:
+        #
+        # IMMICH SERVER
+        #
         - name: immich-server
           image: ghcr.io/immich-app/immich-server:release
+
           securityContext:
-            privileged: true   # REQUIRED for FUSE
+            privileged: true
+
           env:
             - name: ACCESS_KEY
               valueFrom:
                 secretKeyRef:
                   name: immich-s3
                   key: accessKeyId
+
             - name: SECRET_KEY
               valueFrom:
                 secretKeyRef:
                   name: immich-s3
                   key: secretAccessKey
+
             - name: NODE_IP
               valueFrom:
                 fieldRef:
                   fieldPath: status.hostIP
-            - name: IMMICH_DATA_DIR
-              value: /storage/data
+
             - name: IMMICH_PORT
-              value: "80"
+              value: "2283"
+
             - name: DB_HOSTNAME
               value: localhost
+
             - name: DB_PORT
               value: "5432"
+
             - name: DB_USERNAME
               valueFrom:
                 secretKeyRef:
                   name: immich-db
                   key: username
+
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: immich-db
                   key: password
+
             - name: DB_DATABASE_NAME
               valueFrom:
                 secretKeyRef:
                   name: immich-db
                   key: database
+
+            # uploads on JuiceFS
+            - name: UPLOAD_LOCATION
+              value: /mnt/block-storage/uploads
+
           command:
             - sh
             - -c
             - |
               set -e
+
               apt-get update
-              DEBIAN_FRONTEND=noninteractive apt-get install -y s3fs fuse
-              mkdir -p /storage
+              DEBIAN_FRONTEND=noninteractive apt-get install -y s3fs fuse postgresql-client
+
+              mkdir -p /mnt/object-storage
+
               echo "$ACCESS_KEY:$SECRET_KEY" > /tmp/passwd-s3fs
               chmod 600 /tmp/passwd-s3fs
-              s3fs immich-bucket /storage \
+
+              s3fs immich-bucket /mnt/object-storage \
                 -o url=http://$NODE_IP:9000 \
                 -o use_path_request_style \
                 -o passwd_file=/tmp/passwd-s3fs \
@@ -75,20 +95,23 @@ spec:
                 -o gid=1000 \
                 -o mp_umask=002
 
-              # wait for Postgres (JuiceFS mount)
               until pg_isready -h localhost -p 5432; do
                 echo "Waiting for Postgres..."
                 sleep 2
               done
 
               exec start.sh
-          volumeMounts:
-            - name: immich-media
-              mountPath: /storage
-            - name: immich-db
-              mountPath: /storage/db
+
           ports:
             - containerPort: 2283
+
+          volumeMounts:
+            - name: immich-minio
+              mountPath: /mnt/object-storage
+
+            - name: immich-juicefs
+              mountPath: /mnt/block-storage
+
           resources:
             requests:
               cpu: "100m"
@@ -97,14 +120,20 @@ spec:
               cpu: "3000m"
               memory: "8Gi"
 
+        #
+        # MACHINE LEARNING
+        #
         - name: immich-ml
           image: ghcr.io/immich-app/immich-machine-learning:release
+
           env:
             - name: ML_CACHE_DIR
               value: /cache
+
           volumeMounts:
             - name: ml-cache
               mountPath: /cache
+
           resources:
             requests:
               cpu: "100m"
@@ -113,34 +142,50 @@ spec:
               cpu: "2000m"
               memory: "2Gi"
 
+        #
+        # REDIS
+        #
         - name: redis
           image: docker.io/valkey/valkey:9
+
           resources:
             requests:
               cpu: "50m"
               memory: "100Mi"
 
+        #
+        # POSTGRES
+        #
         - name: postgres
           image: tensorchord/pgvecto-rs:pg14-v0.2.0
+
           env:
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
                   name: immich-db
                   key: username
+
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: immich-db
                   key: password
+
             - name: POSTGRES_DB
               valueFrom:
                 secretKeyRef:
                   name: immich-db
                   key: database
+
+            - name: PGDATA
+              value: /var/lib/postgresql/data
+
           volumeMounts:
-            - name: immich-db
+            - name: immich-juicefs
               mountPath: /var/lib/postgresql/data
+              subPath: postgres
+
           resources:
             requests:
               cpu: "100m"
@@ -150,13 +195,26 @@ spec:
               memory: "2Gi"
 
       volumes:
-        - name: immich-media
-          emptyDir: {} # S3FUSE will mount here dynamically
+        #
+        # S3FS mount target
+        #
+        - name: immich-minio
+          emptyDir: {}
+
+        #
+        # JuiceFS shared host mount
+        #
+        - name: immich-juicefs
+          hostPath:
+            path: /mnt/juicefs/immich
+            type: DirectoryOrCreate
+
+        #
+        # ML cache
+        #
         - name: ml-cache
           emptyDir: {}
-        - name: immich-db
-          persistentVolumeClaim:
-            claimName: immich-db-pvc
+
 ---
 apiVersion: v1
 kind: Service
@@ -169,6 +227,7 @@ spec:
     - port: 80
       targetPort: 2283
   type: ClusterIP
+
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -176,6 +235,7 @@ metadata:
   name: immich
   annotations:
     kubernetes.io/ingress.class: traefik
+
 spec:
   rules:
     - host: immich.colins.io
@@ -188,6 +248,7 @@ spec:
                 name: immich
                 port:
                   number: 80
+
   tls:
     - hosts:
         - immich.colins.io
