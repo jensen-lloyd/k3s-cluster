@@ -131,7 +131,7 @@ spec:
               value: /cache
 
           volumeMounts:
-            - name: ml-cache
+            - name: immich-minio
               mountPath: /cache
 
           resources:
