@@ -57,10 +57,10 @@ spec:
               echo "$ACCESS_KEY:$SECRET_KEY" > /tmp/passwd-s3fs
               chmod 600 /tmp/passwd-s3fs
 
-              mkdir -p /object-storage
+              mkdir -p /mnt/object-storage
 
               echo "Mounting S3 bucket..."
-              s3fs jellyfin-video /object-storage \
+              s3fs jellyfin-video /mnt/object-storage \
                 -o url=http://$NODE_IP:9000 \
                 -o use_path_request_style \
                 -o passwd_file=/tmp/passwd-s3fs \
