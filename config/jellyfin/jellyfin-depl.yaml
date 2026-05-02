@@ -36,7 +36,7 @@ spec:
                 fieldRef:
                   fieldPath: status.hostIP
             - name: JELLYFIN_CONFIG_DIR
-              value: /mnt/block-storage/config
+              value: /mnt/object-storage/config
             - name: JELLYFIN_CACHE_DIR
               value: /mnt/object-storage/cache
             - name: JELLYFIN_DATA_DIR
