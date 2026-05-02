@@ -44,9 +44,6 @@ spec:
             - name: IMMICH_PORT
               value: "2283"
 
-            - name: REDIS_HOST
-              value: 127.0.0.1
-
             - name: DB_HOSTNAME
               value: localhost
 
@@ -98,10 +95,8 @@ spec:
                 -o gid=1000 \
                 -o mp_umask=002
 
-              until pg_isready -h localhost -p 5432; do
-                echo "Waiting for Postgres..."
-                sleep 2
-              done
+              echo "127.0.0.1 redis" > /etc/hosts
+
 
               exec start.sh
 
