@@ -68,9 +68,6 @@ spec:
                   name: immich-db
                   key: database
 
-            # uploads on JuiceFS
-            - name: UPLOAD_LOCATION
-              value: /mnt/block-storage/uploads
 
           command:
             - sh
@@ -105,10 +102,8 @@ spec:
 
           volumeMounts:
             - name: immich-minio
-              mountPath: /mnt/object-storage
+              mountPath: /data
 
-            - name: immich-juicefs
-              mountPath: /mnt/block-storage
 
           resources:
             requests:
