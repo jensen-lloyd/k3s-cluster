@@ -90,7 +90,8 @@ spec:
                 -o allow_other \
                 -o uid=1000 \
                 -o gid=1000 \
-                -o mp_umask=002
+                -o mp_umask=002 \
+                -o nonempty
 
               echo "127.0.0.1 redis" >> /etc/hosts
 
