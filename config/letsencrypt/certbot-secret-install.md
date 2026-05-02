@@ -9,3 +9,8 @@ kubectl create secret tls wildcard-colins-io-tls \
 
 kubectl get secret wildcard-colins-io-tls -n default
 
+
+
+
+To renew:
+re-run the first command
