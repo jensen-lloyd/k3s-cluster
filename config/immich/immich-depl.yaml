@@ -101,11 +101,6 @@ spec:
           ports:
             - containerPort: 2283
 
-          volumeMounts:
-            - name: immich-minio
-              mountPath: /data
-
-
           resources:
             requests:
               cpu: "100m"
