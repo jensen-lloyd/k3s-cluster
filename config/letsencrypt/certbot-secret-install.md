@@ -14,3 +14,4 @@ kubectl get secret wildcard-colins-io-tls -n default
 
 To renew:
 re-run the first command
+then re-create the kubernetes secret
