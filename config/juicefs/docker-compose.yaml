@@ -20,7 +20,7 @@ services:
 
     volumes:
       # Host mountpoint where JuiceFS will appear
-      - /mnt/raid/juicefs:/mnt:rw,rshared
+      - /mnt/juicefs:/mnt:rw,rshared
 
     command:
       [
