@@ -95,6 +95,8 @@ spec:
 
               echo "127.0.0.1 redis" >> /etc/hosts
 
+              sleep 30m
+
               exec start.sh
 
           volumeMounts:
