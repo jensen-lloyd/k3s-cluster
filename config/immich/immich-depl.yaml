@@ -84,7 +84,7 @@ spec:
               chmod 600 /tmp/passwd-s3fs
 
               s3fs immich-backup /mnt/minio \
-                -o url=http://minio.local:9000 \
+                -o url=http://$NODE_IP:9000 \
                 -o use_path_request_style \
                 -o passwd_file=/tmp/passwd-s3fs \
                 -o allow_other \
