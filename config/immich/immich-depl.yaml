@@ -59,7 +59,7 @@ spec:
             - name: REDIS_HOSTNAME
               value: localhost
 
-            - name: MACHINE_LEARNING_URL
+            - name: IMMICH_MACHINE_LEARNING_URL
               value: http://localhost:3003
 
             ###FROM EXAMPLE .ENV FOR USE WITH DOCKER-COMPOSE
