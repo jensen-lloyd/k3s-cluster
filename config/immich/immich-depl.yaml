@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: immich
-  namespace: default
 spec:
   replicas: 1
   selector:
@@ -13,189 +12,167 @@ spec:
       labels:
         app: immich
     spec:
+      volumes:
+        # Main data (JuiceFS)
+        - name: immich-data
+          hostPath:
+            path: /mnt/juicefs/immich
+
+        # Postgres
+        - name: postgres-data
+          hostPath:
+            path: /mnt/juicefs/immich/postgres
+
+        # ML cache (node local)
+        - name: model-cache
+          hostPath:
+            path: /tmp/immich-cache
+
       containers:
-        #
+
+        # ------------------------
         # IMMICH SERVER
-        #
+        # ------------------------
         - name: immich-server
           image: ghcr.io/immich-app/immich-server:release
+          ports:
+            - containerPort: 2283
 
-          securityContext:
-            privileged: true
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "1Gi"
+            limits:
+              cpu: "2000m"
+              memory: "2Gi"
 
           env:
-            - name: ACCESS_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: immich-s3
-                  key: accessKeyId
-
-            - name: SECRET_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: immich-s3
-                  key: secretAccessKey
-
-            - name: NODE_IP
-              valueFrom:
-                fieldRef:
-                  fieldPath: status.hostIP
-
-            - name: IMMICH_PORT
-              value: "2283"
-
             - name: DB_HOSTNAME
               value: localhost
-
-            - name: DB_PORT
-              value: "5432"
-
             - name: DB_USERNAME
               valueFrom:
                 secretKeyRef:
                   name: immich-db
                   key: username
-
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: immich-db
                   key: password
-
             - name: DB_DATABASE_NAME
               valueFrom:
                 secretKeyRef:
                   name: immich-db
                   key: database
 
-
-          command:
-            - sh
-            - -c
-            - |
-              set -e
-
-              apt-get update
-              DEBIAN_FRONTEND=noninteractive apt-get install -y s3fs fuse postgresql-client
-
-              mkdir -p /mnt/minio
-
-              echo "$ACCESS_KEY:$SECRET_KEY" > /tmp/passwd-s3fs
-              chmod 600 /tmp/passwd-s3fs
-
-              s3fs immich-backup /mnt/minio \
-                -o url=http://$NODE_IP:9000 \
-                -o use_path_request_style \
-                -o passwd_file=/tmp/passwd-s3fs \
-                -o allow_other \
-                -o uid=1000 \
-                -o gid=1000 \
-                -o mp_umask=002 \
-                -o nonempty
-
-              echo "127.0.0.1 redis" >> /etc/hosts
-
-              sleep 30m
-
-              exec start.sh
+            - name: REDIS_HOSTNAME
+              value: localhost
 
           volumeMounts:
-          - mountPath: /data
-            name: immich-juicefs
+            - name: immich-data
+              mountPath: /data
 
+            # 🔥 This overrides ONLY /data/upload
+            - name: upload-data
+              mountPath: /data/upload
 
-          ports:
-            - containerPort: 2283
+        # ------------------------
+        # MICROSERVICES
+        # ------------------------
+        - name: immich-microservices
+          image: ghcr.io/immich-app/immich-server:release
+          command: ["start-microservices.sh"]
 
           resources:
             requests:
-              cpu: "100m"
-              memory: "500Mi"
+              cpu: ""
+              memory: ""
             limits:
-              cpu: "3000m"
-              memory: "8Gi"
+              cpu: ""
+              memory: ""
 
-        #
+          env:
+            - name: DB_HOSTNAME
+              value: localhost
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: immich-db
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: immich-db
+                  key: password
+            - name: DB_DATABASE_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: immich-db
+                  key: database
+
+            - name: REDIS_HOSTNAME
+              value: localhost
+
+          volumeMounts:
+            - name: immich-data
+              mountPath: /data
+            - name: upload-data
+              mountPath: /data/upload
+
+        # ------------------------
         # MACHINE LEARNING
-        #
+        # ------------------------
         - name: immich-ml
           image: ghcr.io/immich-app/immich-machine-learning:release
 
-          env:
-            - name: IMMICH_PORT
-              value: "2283"
-            - name: ML_CACHE_DIR
-              value: /cache
-
           resources:
             requests:
-              cpu: "100m"
-              memory: "500Mi"
+              cpu: "250m"
+              memory: "100m"
             limits:
-              cpu: "2000m"
+              cpu: "1250M"
               memory: "2Gi"
 
-        #
+          env:
+            - name: TRANSFORMERS_CACHE
+              value: /cache
+
+          volumeMounts:
+            - name: model-cache
+              mountPath: /cache
+
+        # ------------------------
         # REDIS
-        #
+        # ------------------------
         - name: redis
-          image: docker.io/valkey/valkey:9
+          image: redis:7-alpine
 
-          resources:
-            requests:
-              cpu: "50m"
-              memory: "100Mi"
-
-        #
+        # ------------------------
         # POSTGRES
-        #
+        # ------------------------
         - name: postgres
           image: tensorchord/pgvecto-rs:pg14-v0.2.0
 
           env:
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: immich-db
+                  key: database
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
                   name: immich-db
                   key: username
-
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: immich-db
                   key: password
 
-            - name: POSTGRES_DB
-              valueFrom:
-                secretKeyRef:
-                  name: immich-db
-                  key: database
-
-            - name: PGDATA
-              value: /var/lib/postgresql/data
-
           volumeMounts:
-            - name: immich-juicefs
+            - name: postgres-data
               mountPath: /var/lib/postgresql/data
-              subPath: postgres
-
-          resources:
-            requests:
-              cpu: "100m"
-              memory: "500Mi"
-            limits:
-              cpu: "2000m"
-              memory: "2Gi"
-
-      volumes:
-        #
-        # JuiceFS shared host mount
-        #
-        - name: immich-juicefs
-          hostPath:
-            path: /mnt/juicefs/immich
-            type: DirectoryOrCreate
-
 
 ---
 apiVersion: v1

@@ -1,0 +1,30 @@
+          command:
+            - sh
+            - -c
+            - |
+              set -e
+
+              apt-get update
+              DEBIAN_FRONTEND=noninteractive apt-get install -y s3fs fuse postgresql-client
+
+              mkdir -p /mnt/minio
+
+              echo "$ACCESS_KEY:$SECRET_KEY" > /tmp/passwd-s3fs
+              chmod 600 /tmp/passwd-s3fs
+
+              s3fs immich-backup /mnt/minio \
+                -o url=http://$NODE_IP:9000 \
+                -o use_path_request_style \
+                -o passwd_file=/tmp/passwd-s3fs \
+                -o allow_other \
+                -o uid=1000 \
+                -o gid=1000 \
+                -o mp_umask=002 \
+                -o nonempty
+
+              echo "127.0.0.1 redis" >> /etc/hosts
+
+              sleep 30m
+
+              exec start.sh
+
