@@ -72,9 +72,6 @@ spec:
             - name: immich-data
               mountPath: /data
 
-            # 🔥 This overrides ONLY /data/upload
-            - name: upload-data
-              mountPath: /data/upload
 
         # ------------------------
         # MICROSERVICES
@@ -116,8 +113,6 @@ spec:
           volumeMounts:
             - name: immich-data
               mountPath: /data
-            - name: upload-data
-              mountPath: /data/upload
 
         # ------------------------
         # MACHINE LEARNING
