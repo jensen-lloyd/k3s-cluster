@@ -17,7 +17,55 @@ spec:
         - name: s3fuse
           image: ubuntu:24.04
 
-          command: ["/bin/bash", "-c", "sleep infinity"]
+
+          securityContext:
+            privileged: true
+
+          env:
+            - name: ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: immich-s3
+                  key: accessKeyId
+
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: immich-s3
+                  key: secretAccessKey
+
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+
+
+
+
+          command:
+            - sh
+            - -c
+            - |
+              set -e
+
+              apt-get update
+              DEBIAN_FRONTEND=noninteractive apt-get install -y s3fs fuse postgresql-client
+
+              mkdir -p /mnt/s3fuse
+
+              echo "$ACCESS_KEY:$SECRET_KEY" > /tmp/passwd-s3fs
+              chmod 600 /tmp/passwd-s3fs
+
+              s3fs immich-backup /mnt/s3fuse \
+                -o url=http://$NODE_IP:9000 \
+                -o use_path_request_style \
+                -o passwd_file=/tmp/passwd-s3fs \
+                -o allow_other \
+                -o uid=1000 \
+                -o gid=1000 \
+                -o mp_umask=002 \
+                -o nonempty
+
 
           volumeMounts:
             - name: immich-media
@@ -25,5 +73,4 @@ spec:
 
       volumes:
         - name: immich-media
-          hostPath:
-            path: /mnt/s3fuse
+          emptyDir: {}

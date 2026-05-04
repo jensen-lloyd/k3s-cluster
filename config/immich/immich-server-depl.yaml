@@ -18,6 +18,10 @@ spec:
           hostPath:
             path: /mnt/juicefs/immich
 
+        - name: media
+          emptyDir: {}
+
+
       containers:
         - name: immich-server
           image: ghcr.io/immich-app/immich-server:release
@@ -64,6 +68,9 @@ spec:
               value: v2.7.5
 
           volumeMounts:
+            - name: immich-media
+              mountPath: /data/library
+
             - name: immich-data
               mountPath: /data
 
