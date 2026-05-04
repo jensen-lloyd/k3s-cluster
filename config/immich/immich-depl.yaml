@@ -94,6 +94,8 @@ spec:
           env:
             - name: TRANSFORMERS_CACHE
               value: /cache
+            - name: immich_port
+              value: "2283"
 
           volumeMounts:
             - name: model-cache
