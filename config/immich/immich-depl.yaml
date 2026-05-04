@@ -78,7 +78,6 @@ spec:
         # ------------------------
         - name: immich-microservices
           image: ghcr.io/immich-app/immich-server:release
-          command: ["start-microservices.sh"]
 
           resources:
             requests:
