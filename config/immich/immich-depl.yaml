@@ -62,7 +62,7 @@ spec:
             - name: DB_DATABASE_NAME
               valueFrom:
                 secretKeyRef:
-                  nam2e: immich-db
+                  name: immich-db
                   key: database
 
             - name: REDIS_HOSTNAME
