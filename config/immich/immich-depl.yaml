@@ -88,7 +88,7 @@ spec:
               cpu: "250m"
               memory: "100Mi"
             limits:
-              cpu: "1250M"
+              cpu: "1250m"
               memory: "2Gi"
 
           env:
