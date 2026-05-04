@@ -47,7 +47,7 @@ spec:
               memory: "2Gi"
 
           env:
-            - name: DB_HOSTNAME
+            - name: DB_URL
               value: localhost
             - name: DB_USERNAME
               value: postgres
