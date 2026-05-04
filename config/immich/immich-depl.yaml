@@ -69,7 +69,7 @@ spec:
               value: localhost
 
             ###FROM EXAMPLE .ENV FOR USE WITH DOCKER-COMPOSE
-            - name: IMICH_PORT
+            - name: IMMICH_PORT
               value: "2283"
 
             - name: UPLOAD_LOCATION
