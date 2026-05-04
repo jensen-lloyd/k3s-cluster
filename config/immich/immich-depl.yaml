@@ -70,7 +70,7 @@ spec:
 
             ###FROM EXAMPLE .ENV FOR USE WITH DOCKER-COMPOSE
             - name: IMICH_PORT
-              value: 2283
+              value: "2283"
 
             - name: UPLOAD_LOCATION
               value: ./library
