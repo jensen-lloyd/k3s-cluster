@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: immich-server
+  namespace: immich
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: immich-server
+  template:
+    metadata:
+      labels:
+        app: immich-server
+    spec:
+      volumes:
+        - name: immich-data
+          hostPath:
+            path: /mnt/juicefs/immich
+
+      containers:
+        - name: immich-server
+          image: ghcr.io/immich-app/immich-server:release
+
+          ports:
+            - containerPort: 2283
+
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "1Gi"
+            limits:
+              cpu: "1000m"
+              memory: "2Gi"
+
+          env:
+            - name: DB_HOSTNAME
+              value: postgres
+            - name: DB_USERNAME
+              value: postgres
+            - name: DB_PASSWORD
+              value: postgres
+            - name: DB_DATABASE_NAME
+              value: immich
+
+            - name: REDIS_HOSTNAME
+              value: redis
+
+            - name: IMMICH_MACHINE_LEARNING_URL
+              value: http://immich-ml:3003
+
+            - name: IMMICH_PORT
+              value: "2283"
+
+            - name: UPLOAD_LOCATION
+              value: ./library
+
+            - name: DB_DATA_LOCATION
+              value: ./postgres
+
+            - name: IMMICH_VERSION
+              value: v2.7.5
+
+          volumeMounts:
+            - name: immich-data
+              mountPath: /data
+
+
+
+---
+
+
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: immich-server
+  namespace: immich
+spec:
+  selector:
+    app: immich-server
+  ports:
+    - port: 2283
+      targetPort: 2283
+
+
+

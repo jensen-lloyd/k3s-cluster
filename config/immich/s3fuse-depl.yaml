@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: s3fuse
+  namespace: immich
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: s3fuse
+  template:
+    metadata:
+      labels:
+        app: s3fuse
+    spec:
+      containers:
+        - name: s3fuse
+          image: ubuntu:24.04
+
+          command: ["/bin/bash", "-c", "sleep infinity"]
+
+          volumeMounts:
+            - name: immich-media
+              mountPath: /data/library
+
+      volumes:
+        - name: immich-media
+          hostPath:
+            path: /mnt/s3fuse
