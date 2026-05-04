@@ -80,7 +80,7 @@ spec:
         # ------------------------
         # MACHINE LEARNING
         # ------------------------
-        - name: immich-ml
+        - name: immich-machine-learning
           image: ghcr.io/immich-app/immich-machine-learning:release
 
           resources:
