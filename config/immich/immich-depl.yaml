@@ -74,46 +74,6 @@ spec:
 
 
         # ------------------------
-        # MICROSERVICES
-        # ------------------------
-        - name: immich-microservices
-          image: ghcr.io/immich-app/immich-server:release
-
-          resources:
-            requests:
-              cpu: "100m"
-              memory: "100Mi"
-            limits:
-              cpu: "500m"
-              memory: "1Gi"
-
-          env:
-            - name: DB_HOSTNAME
-              value: localhost
-            - name: DB_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: immich-db
-                  key: username
-            - name: DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: immich-db
-                  key: password
-            - name: DB_DATABASE_NAME
-              valueFrom:
-                secretKeyRef:
-                  name: immich-db
-                  key: database
-
-            - name: REDIS_HOSTNAME
-              value: localhost
-
-          volumeMounts:
-            - name: immich-data
-              mountPath: /data
-
-        # ------------------------
         # MACHINE LEARNING
         # ------------------------
         - name: immich-ml
