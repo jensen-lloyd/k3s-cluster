@@ -19,7 +19,7 @@ spec:
 
           env:
             - name: POSTGRES_DB
-              value: postgres
+              value: immich
             - name: POSTGRES_USER
               value: postgres
             - name: POSTGRES_PASSWORD
