@@ -79,6 +79,7 @@ spec:
           volumeMounts:
             - name: immich-media
               mountPath: /mnt/s3fuse
+              mountPropagation: Bidirectional
 
         # ------------------------
         # IMMICH SERVER
@@ -135,6 +136,8 @@ spec:
             # then overlay S3 mount
             - name: immich-media
               mountPath: /data/library
+              mountPropagation: HostToContainer
+
 
 ---
 apiVersion: v1
