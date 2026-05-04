@@ -55,10 +55,10 @@ spec:
               value: "2283"
 
             - name: UPLOAD_LOCATION
-              value: ./library
+              value: /data/library
 
             - name: DB_DATA_LOCATION
-              value: ./postgres
+              value: /data/postgres
 
             - name: IMMICH_VERSION
               value: v2.7.5
