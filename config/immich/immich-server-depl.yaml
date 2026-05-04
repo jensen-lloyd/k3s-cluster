@@ -18,7 +18,7 @@ spec:
           hostPath:
             path: /mnt/juicefs/immich
 
-        - name: media
+        - name: immich-media
           emptyDir: {}
 
 
