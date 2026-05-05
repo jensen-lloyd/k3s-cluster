@@ -8,7 +8,7 @@ spec:
     app: pihole-web
   ports:
     - port: 80
-      targetPort:80
+      targetPort: 80
 
 
 ---
