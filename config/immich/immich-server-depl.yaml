@@ -129,13 +129,8 @@ spec:
               value: v2.7.5
 
           volumeMounts:
-            # mount base data FIRST
-            - name: immich-data
-              mountPath: /data
-
-            # then overlay S3 mount
             - name: immich-media
-              mountPath: /data/library
+              mountPath: /data
               mountPropagation: HostToContainer
 
 
