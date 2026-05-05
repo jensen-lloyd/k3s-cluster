@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: pihole-ingress
+  name: pihole-web
   namespace: pihole
 spec:
   selector:
-    app: pihole-web
+    app: pihole
   ports:
     - port: 80
       targetPort: 80
@@ -30,7 +30,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: pihole
+                name: pihole-web
                 port:
                   number: 80
 
