@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pihole
+  namespace: immich
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pihole
+  template:
+    metadata:
+      labels:
+        app: pihole
+    spec:
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+
+      containers:
+        - name: pihole
+          image: pihole/pihole:latest
+
+          ports:
+            - containerPort: 53
+              protocol: UDP
+            - containerPort: 53
+              protocol: TCP
+            - containerPort: 80
+
+          env:
+            - name: TZ
+              value: "Australia/Melbourne"
+
+          volumeMounts:
+            - name: pihole-config-data
+              mountPath: /etc/pihole
+            - name: pihole-dnsmasq-data
+              mountPath: /etc/dnsmasq.d
+
+      volumes:
+        - name: pihole-config-data
+          hostPath:
+            path: /mnt/juicefs/pihole/data
+
+
+        - name: pihole-dnsmasq-data
+          hostPath:
+            path: /mnt/juicefs/pihole/dnsmasq
