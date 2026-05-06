@@ -26,8 +26,14 @@ spec:
               value: "32"
             - name: svc_enable
               value: "true"
-            - name: vip_arp
+            - name: svc_election
               value: "true"
+            - name: lb_enable
+              value: "true"
+
+            - name: svc_leasename
+              value: kube_vip_service
+
           securityContext:
             capabilities:
               add:
