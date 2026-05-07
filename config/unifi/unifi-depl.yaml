@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: unifi
+  namespace: unifi
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: unifi
+
+  template:
+    metadata:
+      labels:
+        app: unifi
+
+    spec:
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+
+      nodeSelector:
+        kubernetes.io/hostname: node-2
+
+      containers:
+        - name: unifi
+          image: jacobalberty/unifi:latest
+
+          env:
+            - name: TZ
+              value: Australia/Melbourne
+
+          ports:
+            - containerPort: 3478
+              protocol: UDP
+
+            - containerPort: 8080
+              protocol: TCP
+
+            - containerPort: 8443
+              protocol: TCP
+
+            - containerPort: 10001
+              protocol: UDP
+
+          volumeMounts:
+            - name: unifi-data
+              mountPath: /unifi
+
+      volumes:
+        - name: unifi-data
+          hostPath:
+            path: /mnt/juicefs/unifi
+            type: DirectoryOrCreate
