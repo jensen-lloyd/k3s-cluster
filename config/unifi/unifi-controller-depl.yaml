@@ -32,9 +32,25 @@ spec:
               value: Australia/Melbourne
 
           ports:
-            - containerPort: 8443
+            - name: ui
+              containerPort: 8443
               hostPort: 8443
               protocol: TCP
+
+            - name: inform
+              containerPort: 8080
+              hostPort: 8080
+              protocol: TCP
+
+            - name: stun
+              containerPort: 3478
+              hostPort: 3478
+              protocol: UDP
+
+            - name: discovery
+              containerPort: 10001
+              hostPort: 10001
+              protocol: UDP
 
           volumeMounts:
             - name: unifi-data
