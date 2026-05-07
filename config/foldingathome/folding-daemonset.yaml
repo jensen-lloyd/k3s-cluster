@@ -35,6 +35,9 @@ spec:
             - name: ENABLE_GPU
               value: "false"
 
+            - name: GPU
+              value: "false"
+
             - name: TZ
               value: Australia/Melbourne
 
