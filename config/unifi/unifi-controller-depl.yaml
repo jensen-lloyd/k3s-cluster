@@ -32,8 +32,8 @@ spec:
               value: Australia/Melbourne
 
           ports:
-            - containerPort: 8080
-              hostPort: 8080
+            - containerPort: 8443
+              hostPort: 8443
               protocol: TCP
 
           volumeMounts:
