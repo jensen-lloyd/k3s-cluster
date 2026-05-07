@@ -3,9 +3,11 @@ kind: Ingress
 metadata:
   name: unifi
   namespace: unifi
-
   annotations:
     kubernetes.io/ingress.class: traefik
+
+    # FIX: tell Traefik backend is HTTPS (ignore Unifi's inbuilt TLS)
+    traefik.ingress.kubernetes.io/service.serversscheme: https
 
 spec:
   rules:
