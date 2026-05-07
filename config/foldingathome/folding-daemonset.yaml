@@ -1,5 +1,6 @@
 apiVersion: apps/v1
 kind: DaemonSet
+
 metadata:
   name: foldingathome
   namespace: folding
@@ -34,6 +35,13 @@ spec:
             - name: TZ
               value: Australia/Melbourne
 
+            # IMPORTANT
+            - name: PUID
+              value: "1000"
+
+            - name: PGID
+              value: "1000"
+
           resources:
             requests:
               cpu: "100m"
@@ -42,3 +50,13 @@ spec:
             limits:
               cpu: "4"
               memory: "8Gi"
+
+          volumeMounts:
+            - name: folding-data
+              mountPath: /config
+
+      volumes:
+        - name: folding-data
+          hostPath:
+            path: /mnt/juicefs/folding
+            type: DirectoryOrCreate
