@@ -24,7 +24,10 @@ spec:
 
           env:
             - name: USER
-              value: anonymous
+              value: Jensen
+
+            - name: TOKEN
+              value: YN0IzYN0j6cOmj6cq6wvHq6wq2fATq2eVgI0sVgIq9M
 
             - name: TEAM
               value: "0"
