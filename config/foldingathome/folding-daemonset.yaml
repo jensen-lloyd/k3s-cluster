@@ -41,7 +41,6 @@ spec:
             - name: PGID
               value: "1000"
 
-            # node name for unique storage path
             - name: NODE_NAME
               valueFrom:
                 fieldRef:
@@ -59,15 +58,7 @@ spec:
           volumeMounts:
             - name: folding-data
               mountPath: /config
-
-          command:
-            - sh
-            - -c
-            - |
-              mkdir -p /mnt/folding/$NODE_NAME
-              rm -rf /config
-              ln -s /mnt/folding/$NODE_NAME /config
-              exec /init
+              subPathExpr: $(NODE_NAME)
 
       volumes:
         - name: folding-data
