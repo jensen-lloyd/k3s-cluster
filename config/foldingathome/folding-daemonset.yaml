@@ -40,5 +40,5 @@ spec:
               memory: "256Mi"
 
             limits:
-              cpu: "3"
+              cpu: "4"
               memory: "8Gi"
