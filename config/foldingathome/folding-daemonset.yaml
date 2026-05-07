@@ -35,12 +35,17 @@ spec:
             - name: TZ
               value: Australia/Melbourne
 
-            # IMPORTANT
             - name: PUID
               value: "1000"
 
             - name: PGID
               value: "1000"
+
+            # node name for unique storage path
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
 
           resources:
             requests:
@@ -54,6 +59,15 @@ spec:
           volumeMounts:
             - name: folding-data
               mountPath: /config
+
+          command:
+            - sh
+            - -c
+            - |
+              mkdir -p /mnt/folding/$NODE_NAME
+              rm -rf /config
+              ln -s /mnt/folding/$NODE_NAME /config
+              exec /init
 
       volumes:
         - name: folding-data
