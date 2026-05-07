@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: foldingathome
+  namespace: default
+
+spec:
+  selector:
+    matchLabels:
+      app: foldingathome
+
+  template:
+    metadata:
+      labels:
+        app: foldingathome
+
+    spec:
+      priorityClassName: background-compute
+
+      containers:
+        - name: fah
+          image: linuxserver/foldingathome:latest
+
+          env:
+            - name: USER
+              value: anonymous
+
+            - name: TEAM
+              value: "0"
+
+            - name: ENABLE_GPU
+              value: "false"
+
+            - name: TZ
+              value: Australia/Melbourne
+
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+
+            limits:
+              cpu: "3"
+              memory: "8Gi"
