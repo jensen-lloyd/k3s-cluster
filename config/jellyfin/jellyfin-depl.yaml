@@ -3,8 +3,6 @@ kind: Deployment
 metadata:
   name: jellyfin
   namespace: jellyfin
-  labels:
-    app: jellyfin
 spec:
   replicas: 1
   selector:
