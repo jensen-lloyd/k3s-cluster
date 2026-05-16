@@ -1,6 +1,6 @@
 services:
   juicefs-init:
-    image: juicedata/mount:ce-release-check
+    image: juicedata/mount:ee-5.3.8-765d1f7
     container_name: juicefs-init
 
     env_file:
