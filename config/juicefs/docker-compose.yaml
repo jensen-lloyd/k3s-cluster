@@ -1,6 +1,6 @@
 services:
   juicefs:
-    image: juicedata/mount:ce-v1.3.0
+    image: juicedata/mount:ce-release-check
     container_name: juicefs
 
     privileged: true
