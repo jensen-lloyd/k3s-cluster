@@ -1,6 +1,6 @@
 services:
   juicefs:
-    image: juicedata/mount:ee-5.3.8-765d1f7
+    image: juicedata/mount:latest
     container_name: juicefs
 
     privileged: true
