@@ -2,7 +2,8 @@ services:
   juicefs:
     image: juicedata/mount:latest
     container_name: juicefs
-
+    
+    network_mode: host
     privileged: true
     restart: unless-stopped
 
