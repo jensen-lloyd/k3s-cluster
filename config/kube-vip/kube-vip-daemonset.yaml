@@ -22,12 +22,19 @@ spec:
           env:
             - name: vip_interface
               value: enp3s0
+            - name: address
+              value: "10.0.1.100"
             - name: vip_cidr
               value: "32"
             - name: svc_enable
               value: "true"
             - name: vip_arp
               value: "true"
+            - name: node_name
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+
           securityContext:
             capabilities:
               add:
