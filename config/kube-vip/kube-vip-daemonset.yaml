@@ -3,29 +3,41 @@ kind: DaemonSet
 metadata:
   name: kube-vip
   namespace: kube-system
+
 spec:
   selector:
     matchLabels:
       app: kube-vip
+
   template:
     metadata:
       labels:
         app: kube-vip
+
     spec:
-      serviceAccountName: kube-vip
       hostNetwork: true
+      serviceAccountName: kube-vip
+
       containers:
         - name: kube-vip
-          image: ghcr.io/kube-vip/kube-vip:latest
+          image: ghcr.io/kube-vip/kube-vip:v0.8.0
+
           args:
             - manager
+
           env:
             - name: vip_interface
               value: enp3s0
+
             - name: svc_enable
               value: "true"
+
             - name: vip_arp
               value: "true"
+
+            - name: svc_election
+              value: "true"
+
             - name: node_name
               valueFrom:
                 fieldRef:
@@ -36,4 +48,3 @@ spec:
               add:
                 - NET_ADMIN
                 - NET_RAW
-
