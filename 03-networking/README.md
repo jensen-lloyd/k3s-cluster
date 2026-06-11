@@ -1,25 +1,5 @@
 # **03 – Making 10Gb Work Without a Switch (and Finally Installing Kubernetes)**
 
-> “The hardware was working.  
-> The OS was clean.  
-> Kubernetes should have taken 10 minutes to install.
-> 
-> It took days.”
-
-But it wasn't Kubernetes fault, it was mine.
-I'm a tightarse (read: Uni student trying to save for a house in one of the most unnaffordable places to live in the world), so didn't want to buy a 10Gig switch.
-However, I like having nice things, so I decided to buy 10Gig NICs for my cluster anyway!
-
-
-
-This turned out to be the most difficult part of the entire build - well, sorta. It didn't really need to be, I just had a specific idea in my head of how things needed to work, and needed to get better at building the solution around the constraints I already had.
-
-But that being said, I love networking, probably a bit of a hot take, but subnetting and networking problems are my jam!
-
-Let's dive right in.
-
-* * *
-
 ## Intro
 
 In the last article, I standardised the OS, storage layout, and access model across all three nodes.
