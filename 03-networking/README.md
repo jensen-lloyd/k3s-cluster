@@ -101,7 +101,11 @@ Each physical connection is its own point-to-point subnet (/30):
 
 * * *
 Here's what we've got, with a sneak peak at the final config!
+<<<<<<< HEAD
 ![network interface diagram](image-5.png)
+=======
+![](image-5.jpg)
+>>>>>>> ad0cb9d07bae9f75f2819cda1258a6b023f70859
 
 * * *
 

@@ -218,7 +218,7 @@ PubkeyAuthentication yes
 PasswordAuthentication no
 PermitRootLogin no
 ```
-(Here we also ensure that we don't allow root login, meaning a potential attacker would also need to elevate their permissions using the password before being able to do any damage)
+(Here we also ensure that we don't allow root login, meaning a potential attacker would also need to elevate their permissions using the password before being able to do any extensive damage)
 
 So now, logging into node-2 looks like this.  
 ![](photo-1.png)
