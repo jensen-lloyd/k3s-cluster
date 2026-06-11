@@ -1,3 +1,25 @@
+# **03 – Making 10Gb Work Without a Switch (and Finally Installing Kubernetes)**
+
+> “The hardware was working.  
+> The OS was clean.  
+> Kubernetes should have taken 10 minutes to install.
+> 
+> It took days.”
+
+But it wasn't Kubernetes fault, it was mine.
+I'm a tightarse (read: Uni student trying to save for a house in one of the most unnaffordable places to live in the world), so didn't want to buy a 10Gig switch.
+However, I like having nice things, so I decided to buy 10Gig NICs for my cluster anyway!
+
+
+
+This turned out to be the most difficult part of the entire build - well, sorta. It didn't really need to be, I just had a specific idea in my head of how things needed to work, and needed to get better at building the solution around the constraints I already had.
+
+But that being said, I love networking, probably a bit of a hot take, but subnetting and networking problems are my jam!
+
+Let's dive right in.
+
+* * *
+
 ## Intro
 
 In the last article, I standardised the OS, storage layout, and access model across all three nodes.
@@ -79,7 +101,7 @@ Each physical connection is its own point-to-point subnet (/30):
 
 * * *
 Here's what we've got, with a sneak peak at the final config!
-![network interface diagram](image-5.jpg)
+![network interface diagram](image-5.png)
 
 * * *
 
@@ -242,7 +264,7 @@ This simplifies Kubernetes dramatically.
 ### Building the 10Gb “Virtual Network”
 Each node gets a dummy interface: `abstract0`
 We can see it's not actually connected to anything physical as the link state is "UNKNOWN"
-![abstract0 virtual interface](image-3.jpg)
+![abstract0 virtual interface](image-3.png)
 
 Assigned IPs:
 
@@ -259,7 +281,7 @@ Importantly, this subnet is also *outside* of the range of the network in my hom
 
 I initially just had this abstract layer on 10.0.100.x, and had problems, until I realised that the networks were conflicting! Simple fix though :)
 
-![Our interfaces with their addresses assigned](image-1.jpg)
+![Our interfaces with their addresses assigned](image-1.png)
 
 * * *
 
@@ -281,7 +303,7 @@ So:
 > Applications just talk to 10.1.0.x  
 > Linux handles how it gets there
 
-![Static routes](image-2.jpg)
+![Static routes](image-2.png)
 
 * * *
 
@@ -311,7 +333,7 @@ This is what MinIO will use later.
 
 We can test this works with ```iperf3```
 
-![10 Gigabit success!](image-4.jpg)
+![10 Gigabit success!](image-4.png)
 * * *
 
 ## Lessons Learned
