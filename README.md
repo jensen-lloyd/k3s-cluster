@@ -5,13 +5,13 @@ This repository documents the design, decisions, and implementation of my self-h
 ## Config files for:
 - [x] MinIO Object storage setup
 - [x] KubeVIP load balancing
-- [ ] JuiceFS block storage
+- [x] JuiceFS block storage
 - [x] k3s install and config
 - [x] TLS certbot config and commands
 - [x] Jellyfin video streaming
-- [ ] Immich photo backup
+- [x] Immich photo backup
 - [ ] PiHole DNS filtering & cache
-- [ ] Unifi controller for network devices
+- [x] Unifi controller for network devices
 - [ ] Traccar location tracking/history
 - [ ] Local and offsite backup strategy
 - [ ] Joplin Notes server

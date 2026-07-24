@@ -1,4 +1,4 @@
-# **03 – Making 10Gb Work Without a Switch (and Finally Installing Kubernetes)**
+# **03 – Making 10Gb Work Without a switch**
 
 ## Intro
 
