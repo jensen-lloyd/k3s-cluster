@@ -27,7 +27,7 @@ spec:
 
           env:
             - name: vip_interface
-              value: enp3s0
+              value: enxc84d442913dc
 
             - name: svc_enable
               value: "true"
@@ -37,6 +37,9 @@ spec:
 
             - name: svc_election
               value: "true"
+
+            - name: address
+              value: 10.0.1.200
 
             - name: node_name
               valueFrom:
