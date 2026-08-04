@@ -25,26 +25,81 @@ spec:
           args:
             - manager
 
+
           env:
             - name: vip_interface
               value: enxc84d442913dc
 
-            - name: svc_enable
-              value: "true"
+            - name: address
+              value: 10.0.1.200
+
+            - name: port
+              value: "6443"
 
             - name: vip_arp
               value: "true"
 
-            - name: svc_election
+            - name: cp_enable
               value: "true"
 
-            - name: address
-              value: 10.0.1.200
+            - name: cp_namespace
+              value: kube-system
 
-            - name: node_name
+            - name: svc_enable
+              value: "true"
+
+            - name: vip_leaderelection
+              value: "true"
+
+            - name: vip_leasename
+              value: plndr-cp-lock
+
+            - name: svc_leasename
+              value: plndr-svcs-lock
+
+            - name: vip_leaseduration
+              value: "5"
+
+            - name: vip_renewdeadline
+              value: "3"
+
+            - name: vip_retryperiod
+              value: "1"
+
+            - name: vip_nodename
               valueFrom:
                 fieldRef:
                   fieldPath: spec.nodeName
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
           securityContext:
             capabilities:
