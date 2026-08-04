@@ -1,0 +1,21 @@
+# --- Cluster ---
+cluster-init: true
+server: https://10.0.1.0:6443
+
+# --- Identity ---
+node-ip: 10.0.1.0
+advertise-address: 10.0.1.0
+
+# --- Storage ---
+data-dir: /mnt/raid/k3s
+
+# --- Networking ---
+flannel-backend: host-gw
+flannel-iface: enp3s0
+
+# --- SAN ---
+tls-san:
+  - 10.0.1.0
+  - 10.0.1.1
+  - 10.0.1.2
+  - 10.0.1.3
