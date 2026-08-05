@@ -85,5 +85,3 @@ spec:
   tls: 
     - hosts: 
       - joplin.colins.io 
-      secretName: wildcard-colins-io-tls
-
