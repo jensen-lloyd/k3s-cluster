@@ -25,6 +25,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: joplin-pvc
+  namespace: joplin
 
 spec:
   storageClassName: manual
