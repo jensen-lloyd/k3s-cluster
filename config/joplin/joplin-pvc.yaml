@@ -16,7 +16,7 @@ spec:
 
   nfs:
     server: 10.0.1.200
-    path: /pool/data/joplin
+    path: /primaryPool/apps/joplin
 
 
 ---
