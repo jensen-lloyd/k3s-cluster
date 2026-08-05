@@ -4,7 +4,7 @@ metadata:
   name: traefik
   namespace: kube-system
   annotations:
-    kube-vip.io/loadbalancerIPs: "10.0.1.100"
+    kube-vip.io/loadbalancerIPs: "10.0.1.200"
 
 spec:
   type: LoadBalancer
