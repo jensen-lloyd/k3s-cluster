@@ -28,10 +28,13 @@ spec:
             - name: APP_BASE_URL
               value: https://joplin.colins.io
 
+            - name: SQLITE_DATABASE
+              value: /joplin-db/db-prod.sqlite
+
 
           volumeMounts:
             - name: joplin-storage
-              mountPath: /
+              mountPath: /joplin-db
 
           ports:
             - containerPort: 22300
