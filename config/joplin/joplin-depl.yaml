@@ -31,7 +31,7 @@ spec:
 
           volumeMounts:
             - name: joplin-storage
-              mountPath: /home/joplin
+              mountPath: /
 
           ports:
             - containerPort: 22300
