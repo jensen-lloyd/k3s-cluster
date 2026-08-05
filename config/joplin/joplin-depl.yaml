@@ -1,0 +1,86 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: joplin
+  namespace: joplin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: joplin
+  template:
+    metadata:
+      labels:
+        app: joplin
+    spec:
+      containers:
+        - name: joplin
+          image: joplin/server:latest
+
+          env:
+            - name: APP_PORT
+              value: "22300"
+
+            - name: APP_BASE_URL
+              value: https://joplin.colins.io
+
+
+          volumeMounts:
+            - name: joplin-storage
+              mountPath: /home/joplin
+
+          ports:
+            - containerPort: 22300
+
+
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+
+      volumes:
+        - name: joplin-storage
+          persistentVolumeClaim:
+            claimName: joplin-pvc
+
+--- 
+apiVersion: v1 
+kind: Service 
+metadata: 
+  name: joplin
+  namespace: joplin
+spec: 
+  selector: 
+    app: joplin
+  ports: 
+    - port: 80
+      targetPort: 22300
+  type: ClusterIP 
+--- 
+apiVersion: networking.k8s.io/v1 
+kind: Ingress 
+metadata: 
+  name: joplin
+  namespace: joplin
+  annotations: 
+    kubernetes.io/ingress.class: traefik 
+spec: 
+  rules: 
+  - host: joplin.colins.io
+    http: 
+      paths: 
+        - path: / 
+          pathType: Prefix 
+          backend: 
+            service: 
+              name: joplin
+              port: 
+                number: 80
+  tls: 
+    - hosts: 
+      - joplin.colins.io 
+      secretName: wildcard-colins-io-tls
+
