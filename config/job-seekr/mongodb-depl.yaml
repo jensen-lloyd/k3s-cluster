@@ -34,7 +34,7 @@ spec:
           command:
             - mongod
             - --bind_ip_all
-            - dbpath
+            - --dbpath
             - /data/db
           ports:
             - containerPort: 27017
