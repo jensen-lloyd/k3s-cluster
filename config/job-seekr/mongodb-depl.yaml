@@ -31,6 +31,11 @@ spec:
       containers:
         - name: mongodb
           image: mongo:8
+          command:
+            - mongod
+            - --bind_ip_all
+            - dbpath
+            - /data/db
           ports:
             - containerPort: 27017
           volumeMounts:
