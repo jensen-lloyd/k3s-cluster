@@ -34,9 +34,14 @@ spec:
           ports:
             - containerPort: 27017
           volumeMounts:
-            - name: job-seekr-data
+            - name: job-seekr-db
               mountPath: /data/db
+              subPath: mongodb
       volumes:
-        - name: job-seekr-data
+        - name: job-seekr-db
           persistentVolumeClaim:
             claimName: job-seekr-pvc
+
+
+
+
