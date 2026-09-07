@@ -17,7 +17,7 @@ metadata:
   name: focus-board
   namespace: focus-board
 spec: 
-  spec.ingressClassName: traefik 
+  ingressClassName: traefik 
   rules: 
   - host: focus-board.colins.io
     http: 
