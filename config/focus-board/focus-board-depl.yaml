@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: focus-board
-          image: ghcr.io/jensen-lloyd/job-seekr/focus-board:dev
+          image: ghcr.io/jensen-lloyd/focus-board/focus-board:dev
           imagePullPolicy: Always
 
 
