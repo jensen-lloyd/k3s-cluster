@@ -16,9 +16,8 @@ kind: Ingress
 metadata: 
   name: focus-board
   namespace: focus-board
-  annotations: 
-    spec.ingressClassName: traefik 
 spec: 
+  spec.ingressClassName: traefik 
   rules: 
   - host: focus-board.colins.io
     http: 
@@ -33,3 +32,4 @@ spec:
   tls: 
     - hosts: 
       - focus-board.colins.io 
+      secretName: wildcard-colins-io-tls
