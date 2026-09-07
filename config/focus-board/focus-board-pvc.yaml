@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: focus-board-pv
+
+spec:
+  capacity:
+    storage: 2Gi
+
+  accessModes:
+    - ReadWriteMany
+
+  storageClassName: manual
+
+  persistentVolumeReclaimPolicy: Retain
+
+  nfs:
+    server: 10.0.1.200
+    path: /primaryPool/apps/focus-board
+
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: focus-board-pvc
+  namespace: focus-board
+
+spec:
+  storageClassName: manual
+
+  accessModes:
+    - ReadWriteMany
+
+  resources:
+    requests:
+      storage: 2Gi
+
+  volumeName: focus-board-pv
+
