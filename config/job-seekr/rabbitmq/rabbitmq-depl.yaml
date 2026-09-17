@@ -27,7 +27,7 @@ spec:
     - name: management
       port: 15672
       targetPort: 15672
-      nodePort: 300072
+      nodePort: 30072
 
 ---
 
