@@ -60,6 +60,13 @@ spec:
       containers:
         - name: rabbitmq
           image: rabbitmq:4-management
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
           ports:
             - name: amqp
               containerPort: 5672
