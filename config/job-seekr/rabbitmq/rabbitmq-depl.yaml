@@ -60,6 +60,9 @@ spec:
       containers:
         - name: rabbitmq
           image: rabbitmq:4-management
+          securityContext:
+            runAsUser: 999
+            runAsGroup: 999
           resources:
             requests:
               cpu: 100m
