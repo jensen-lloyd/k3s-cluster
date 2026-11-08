@@ -4,13 +4,13 @@ metadata:
   name: immich
   namespace: immich
   annotations:
-    kubernetes.io/ingress.class: traefik
+    spec.ingressClassName: traefik
 
     # force HTTP backend (important for Immich + Traefik)
-    traefik.ingress.kubernetes.io/service.serversscheme: http
+    # traefik.ingress.kubernetes.io/service.serversscheme: http
 
     # ensure correct entrypoint (TLS via Traefik)
-    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    # traefik.ingress.kubernetes.io/router.entrypoints: websecure
 
 spec:
   rules:
@@ -28,4 +28,3 @@ spec:
   tls:
     - hosts:
         - immich.colins.io
-      secretName: wildcard-colins-io-tls
