@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: immich-ml
+  namespace: immich
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: immich-ml
+  template:
+    metadata:
+      labels:
+        app: immich-ml
+    spec:
+      containers:
+        - name: immich-ml
+          image: ghcr.io/immich-app/immich-machine-learning:release
+
+          env:
+            - name: TRANSFORMERS_CACHE
+              value: /cache
+            - name: IMMICH_PORT
+              value: "3003"
+
+          volumeMounts:
+            - name: model-cache
+              mountPath: /cache
+
+          ports:
+            - containerPort: 3003
+
+      volumes:
+        - name: model-cache
+          hostPath:
+            path: /tmp/immich-cache
+
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: immich-ml
+  namespace: immich
+spec:
+  selector:
+    app: immich-ml
+  ports:
+    - port: 3003
+      targetPort: 3003
