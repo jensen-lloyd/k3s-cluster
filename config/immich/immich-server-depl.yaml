@@ -68,9 +68,6 @@ spec:
             - name: immich-storage
               mountPath: /data
               subPath: data
-            - name: immich-storage
-              mountPath: /library
-              subPath: library
 
 
 ---
