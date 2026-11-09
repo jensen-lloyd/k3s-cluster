@@ -55,7 +55,7 @@ spec:
               value: "2283"
 
             - name: UPLOAD_LOCATION
-              value: /data/library
+              value: /library
 
             - name: IMMICH_VERSION
               value: v2.7.5
@@ -63,6 +63,9 @@ spec:
           volumeMounts:
             - name: immich-storage
               mountPath: /data
+              subPath: data
+            - name: immich-library
+              mountPath: /library
               subPath: library
 
 
