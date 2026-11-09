@@ -17,6 +17,10 @@ spec:
         - name: immich-ml
           image: ghcr.io/immich-app/immich-machine-learning:release
 
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+
           env:
             - name: TRANSFORMERS_CACHE
               value: /cache
