@@ -61,9 +61,6 @@ spec:
             - name: UPLOAD_LOCATION
               value: /data/library
 
-            - name: IMMICH_VERSION
-              value: v2.7.5
-
           volumeMounts:
             - name: immich-storage
               mountPath: /data
