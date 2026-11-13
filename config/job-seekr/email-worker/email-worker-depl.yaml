@@ -17,3 +17,30 @@ spec:
         - name: email-worker
           image: ghcr.io/jensen-lloyd/job-seekr/email-worker:dev
           imagePullPolicy: Always
+
+
+
+          env:
+            - name: IMAP_HOSTNAME
+              valueFrom:
+                secretKeyRef:
+                  name: email-worker-imap-creds
+                  key: hostname
+
+            - name: IMAP_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: email-worker-imap-creds
+                  key: port
+
+            - name: IMAP_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: email-worker-imap-creds
+                  key: username
+
+            - name: IMAP_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: email-worker-imap-creds
+                  key: password
