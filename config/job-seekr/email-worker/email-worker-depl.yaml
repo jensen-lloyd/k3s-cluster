@@ -44,3 +44,6 @@ spec:
                 secretKeyRef:
                   name: email-worker-imap-creds
                   key: password
+            
+            - name: JobSeekr_RESET
+              value: "FALSE"
